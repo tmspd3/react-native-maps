@@ -59,7 +59,15 @@
 -(void)setFillColor:(UIColor *)fillColor
 {
   _fillColor = fillColor;
-  _polygon.fillColor = fillColor;
+  if (_polygon.map != nil) {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+      weakSelf.polygon.fillColor = fillColor;
+    });
+  }
+  else {
+    _polygon.fillColor = fillColor;
+  }
 }
 
 -(void)setStrokeWidth:(double)strokeWidth
@@ -71,15 +79,7 @@
 -(void)setStrokeColor:(UIColor *) strokeColor
 {
   _strokeColor = strokeColor;
-  if (_polygon.map != nil) {
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        weakSelf.polygon.fillColor = fillColor;
-    });
-  }
-  else {
-    _polygon.fillColor = fillColor;
-  }
+  _polygon.strokeColor = strokeColor;
 }
 
 -(void)setGeodesic:(BOOL)geodesic
