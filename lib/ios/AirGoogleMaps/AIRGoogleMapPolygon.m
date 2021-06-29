@@ -16,6 +16,7 @@
 {
   if (self = [super init]) {
     _polygon = [[AIRGMSPolygon alloc] init];
+    [self setFillColor:[UIColor clearColor]];
   }
 
   return self;
@@ -70,7 +71,15 @@
 -(void)setStrokeColor:(UIColor *) strokeColor
 {
   _strokeColor = strokeColor;
-  _polygon.strokeColor = strokeColor;
+  if (_polygon.map != nil) {
+    __weak typeof(self) weakSelf = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        weakSelf.polygon.fillColor = fillColor;
+    });
+  }
+  else {
+    _polygon.fillColor = fillColor;
+  }
 }
 
 -(void)setGeodesic:(BOOL)geodesic
